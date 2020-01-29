@@ -9,6 +9,7 @@ h2{
   margin-left:30%;
     color:chartreuse;
 }
+
 form{
     margin-left:30%;
     color:aqua;
@@ -20,3 +21,4 @@ form input{
 form option, select{
     background-color:chartreuse;
 }
+
