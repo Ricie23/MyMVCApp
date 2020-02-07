@@ -15,11 +15,13 @@ namespace MyMVCApp.DAL
         }
         public DbSet<MyGames> Games { get; set; }
         public DbSet<Stats> Stats { get; set; }
+        public DbSet<CoverArt> CoverArts { get; set; }
         public DbSet<Trophies> Trophies { get; set; }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
+      
     }
 }

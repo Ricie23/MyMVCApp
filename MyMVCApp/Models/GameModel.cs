@@ -12,5 +12,7 @@ namespace MyMVCApp.Models
         public string Genre { get; set; }
         public double Price { get; set; }
 
+
+
     }
 }

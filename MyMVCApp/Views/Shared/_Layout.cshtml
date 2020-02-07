@@ -27,13 +27,25 @@
                         @Html.ActionLink("Contact", "Contact", "Home")
                     </li>
                     <li class="nav-item nav-link">
-                        @Html.ActionLink("Show All Games", "ShowAllGames", "Games")
+                        @Html.ActionLink("Show Wishlist", "ShowAllGames", "Games")
                     </li>
                     <li class="nav-item nav-link">
-                        @Html.ActionLink("Add New Game", "AddNewGame", "Games")
+                        @Html.ActionLink("Add to Wishlist", "AddNewGame", "Games")
                     </li>
                     <li class="nav-item nav-link">
                         @Html.ActionLink("Trade In Calculator", "TradeInPriceCalc", "Games")
+                    </li>
+                    <li class="nav-item nav-link">
+                        @Html.ActionLink("My Games", "Index", "MyGames")
+                    </li>
+                    <li class="nav-item nav-link">
+                        @Html.ActionLink("My Game Stats", "Index", "Stats")
+                    </li>
+                    <li class="nav-item nav-link">
+                        @Html.ActionLink("My Trophies", "Index", "Trophies")
+                    </li>
+                    <li class="nav-item nav-link">
+                        @Html.ActionLink("Cover Art", "Index", "CoverArts")
                     </li>
                     <li class="nav-item nav-link">
                         @Html.Partial("_LoginPartial")

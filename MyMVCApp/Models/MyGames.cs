@@ -13,8 +13,10 @@ namespace MyMVCApp.Models
         public string Genre { get; set; }
         public double Price { get; set; }
 
-        public virtual Stats Stats { get; set; }
+        public virtual ICollection<Stats> Stats { get; set; }
         public virtual ICollection<Trophies> Trophies { get; set; }
+        public virtual ICollection<CoverArt> Covers { get; set; }
+
 
     }
 }

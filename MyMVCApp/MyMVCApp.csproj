@@ -174,15 +174,20 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CoverArtsController.cs" />
     <Compile Include="Controllers\GamesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MyGamesController.cs" />
+    <Compile Include="Controllers\StatsController.cs" />
+    <Compile Include="Controllers\TrophiesController.cs" />
     <Compile Include="DAL\GameContext.cs" />
     <Compile Include="DAL\GameInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CoverArt.cs" />
     <Compile Include="Models\GameModel.cs" />
     <Compile Include="Models\MyGames.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -358,6 +363,26 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Games\TradeInPriceCalc.cshtml" />
+    <Content Include="Views\MyGames\Create.cshtml" />
+    <Content Include="Views\MyGames\Delete.cshtml" />
+    <Content Include="Views\MyGames\Details.cshtml" />
+    <Content Include="Views\MyGames\Edit.cshtml" />
+    <Content Include="Views\MyGames\Index.cshtml" />
+    <Content Include="Views\Stats\Create.cshtml" />
+    <Content Include="Views\Stats\Delete.cshtml" />
+    <Content Include="Views\Stats\Details.cshtml" />
+    <Content Include="Views\Stats\Edit.cshtml" />
+    <Content Include="Views\Stats\Index.cshtml" />
+    <Content Include="Views\Trophies\Delete.cshtml" />
+    <Content Include="Views\Trophies\Details.cshtml" />
+    <Content Include="Views\Trophies\Edit.cshtml" />
+    <Content Include="Views\Trophies\Index.cshtml" />
+    <Content Include="Views\CoverArts\Create.cshtml" />
+    <Content Include="Views\CoverArts\Delete.cshtml" />
+    <Content Include="Views\CoverArts\Details.cshtml" />
+    <Content Include="Views\CoverArts\Edit.cshtml" />
+    <Content Include="Views\CoverArts\Index.cshtml" />
+    <Content Include="Views\Trophies\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
