@@ -20,15 +20,14 @@ namespace MyMVCApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddNewGame(string gameName, string gameGenre, int gameHours, bool gameIsBeaten)
+        public ActionResult AddNewGame(string gameName, string gameGenre, int gamePrice)
         {
             GameModel e = new GameModel()
             {
                
                 Name = gameName,
                 Genre = gameGenre,
-                Hours = gameHours,
-                IsBeaten = gameIsBeaten
+                Price = gamePrice
             };
             return View("ConfirmGame", e);
         }
