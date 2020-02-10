@@ -20,6 +20,10 @@ namespace MyMVCApp.Controllers
         {
             return View(db.Games.ToList());
         }
+        public ActionResult Display()
+        {
+            return View(db.Games.ToList());
+        }
 
         // GET: MyGames/Details/5
         public ActionResult Details(int? id)
