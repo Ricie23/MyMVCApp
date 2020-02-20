@@ -10,13 +10,13 @@ namespace MyMVCApp.Models
 {
     public class Trophies
     {
-    
-       
+
+        
         public int ID { get; set; }
         
         [Index]
         [Display(Name ="Game ID")]
-        [Required]
+       
         public int MyGamesID { get; set; }
         [MinLength(3,ErrorMessage ="Please enter more than 3 characters")]
         [MaxLength(30, ErrorMessage ="Please enter less than 30 characters")]

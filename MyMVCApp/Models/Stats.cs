@@ -10,13 +10,13 @@ namespace MyMVCApp.Models
     public class Stats
     {
         public int ID { get; set; }
-        [Index]
+        
         [Display(Name ="Game ID")]
+        [Index]
         public int MyGamesID { get; set; }
         [Required]
         [Display(Name ="Hours Played")]
         [Range(0,500, ErrorMessage ="Please enter only a number between 0 and 500")]
-        [RegularExpression(@"^-?*[\.][0-9]", ErrorMessage ="PLease enter a positive number and round up to the first decimal")]
         public int HoursPlayed { get; set; }
         [Required]
         [Display(Name ="Have you beaten the game?")]
