@@ -24,7 +24,34 @@ namespace MyMVCApp.Controllers
         {
             return View(db.Games.ToList());
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditDisplay([Bind(Include = "ID,Name,Genre, Price")] MyGames myGames)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(myGames).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Display");
+            }
+            return View(myGames);
+        }
 
+        //GET: Student/Edit/5
+        public ActionResult EditDisplay(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            MyGames myGames = db.Games.Find(id);
+            if (myGames == null)
+            {
+                return HttpNotFound();
+            }
+            return View(myGames);
+        }
         // GET: MyGames/Details/5
         public ActionResult Details(int? id)
         {

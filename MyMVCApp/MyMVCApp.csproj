@@ -384,6 +384,7 @@
     <Content Include="Views\CoverArts\Index.cshtml" />
     <Content Include="Views\Trophies\Create.cshtml" />
     <Content Include="Views\MyGames\Display.cshtml" />
+    <Content Include="Views\MyGames\EditDisplay.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

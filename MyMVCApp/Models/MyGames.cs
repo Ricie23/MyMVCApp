@@ -2,15 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyMVCApp.Models
 {
+   
     public class MyGames
     {
-        
+        [Key]
         public int ID { get; set; }
+       
+        [Required]
+        [ConcurrencyCheck]
+        [MinLength(3, ErrorMessage ="The name must be longer than 3 characters")]
+        [MaxLength(25, ErrorMessage ="The name must be less than 35 characters")]
+        [Display(Name="Game Title")]
         public string Name { get; set; }
+        [Required]
+        [MinLength(3, ErrorMessage ="The genre must be at least 3 characters")]
+        [MaxLength(30, ErrorMessage ="The genre must be less than 35 characters")]
         public string Genre { get; set; }
+        
+        [DataType(DataType.Currency)]
+        [RegularExpression(@" ^\$?([0-9]{1,3},([0-9]{3},)*[0-9]{3}|[0-9]+)(.[0-9][0-9])?$", ErrorMessage ="Please enter in currency format(00.00)]")]
         public double Price { get; set; }
 
         public virtual ICollection<Stats> Stats { get; set; }

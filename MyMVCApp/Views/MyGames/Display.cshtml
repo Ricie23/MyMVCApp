@@ -4,7 +4,7 @@
 }
 @model IEnumerable<MyMVCApp.Models.MyGames>
     <h2>My Games List</h2>
-    <table class="table table-success">
+    <table class="table table-hover">
         <tr>
             <th>@Html.DisplayNameFor(model => model.Name)</th>
             <th>@Html.DisplayNameFor(model => model.Genre)</th>
@@ -16,7 +16,11 @@
         <td>@Html.DisplayFor(modelItem => item.Name)</td>
         <td>@Html.DisplayFor(modelItem => item.Genre)</td>
         <td>@Html.DisplayFor(modelItem => item.Price)</td>
+        <td>
+            @Html.ActionLink("Edit", "EditDisplay", new { id = item.ID })
+        </td>
     </tr>
+
         }
     </table>
 
