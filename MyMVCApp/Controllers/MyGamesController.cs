@@ -8,6 +8,8 @@ using System.Web;
 using System.Web.Mvc;
 using MyMVCApp.DAL;
 using MyMVCApp.Models;
+using PagedList;
+
 
 namespace MyMVCApp.Controllers
 {
@@ -16,9 +18,44 @@ namespace MyMVCApp.Controllers
         private GameContext db = new GameContext();
 
         // GET: MyGames
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(db.Games.ToList());
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.GenreSortParm = sortOrder == "Genre" ? "genre_desc" : "Genre";
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.currentFilter = searchString;
+
+            var games = from g in db.Games
+                           select g;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                games = games.Where(g => g.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    games = games.OrderByDescending(g => g.Name);
+                    break;
+                case "Genre":
+                    games = games.OrderBy(g => g.Genre);
+                    break;
+                case "genre_desc":
+                    games = games.OrderByDescending(g => g.Genre);
+                    break;
+                default:
+                    games = games.OrderBy(g => g.Name);
+                    break; 
+            }
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return View(games.ToPagedList(pageNumber, pageSize));
         }
         public ActionResult Display()
         {
@@ -80,11 +117,18 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Name,Genre,Price")] MyGames myGames)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Games.Add(myGames);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Games.Add(myGames);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
             }
 
             return View(myGames);
@@ -112,21 +156,32 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Name,Genre,Price")] MyGames myGames)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(myGames).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(myGames).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
             }
             return View(myGames);
         }
 
         // GET: MyGames/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id,bool? saveChangesError=false)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, if the problem persists please contact the system administrator.";
             }
             MyGames myGames = db.Games.Find(id);
             if (myGames == null)
@@ -141,10 +196,17 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            MyGames myGames = db.Games.Find(id);
-            db.Games.Remove(myGames);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                MyGames myGames = db.Games.Find(id);
+                db.Games.Remove(myGames);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (DataException)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
         }
 
         protected override void Dispose(bool disposing)

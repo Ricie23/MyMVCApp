@@ -51,11 +51,18 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,MyGamesID,PhotoPath,AltText")] CoverArt coverArt)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.CoverArts.Add(coverArt);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.CoverArts.Add(coverArt);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
             }
 
             ViewBag.MyGamesID = new SelectList(db.Games, "ID", "Name", coverArt.MyGamesID);
@@ -85,22 +92,33 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,MyGamesID,PhotoPath,AltText")] CoverArt coverArt)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(coverArt).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(coverArt).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
             }
             ViewBag.MyGamesID = new SelectList(db.Games, "ID", "Name", coverArt.MyGamesID);
             return View(coverArt);
         }
 
         // GET: CoverArts/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id,bool? saveChangesError=false)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, if the problem persists please contact the system administrator.";
             }
             CoverArt coverArt = db.CoverArts.Find(id);
             if (coverArt == null)
@@ -115,10 +133,17 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            CoverArt coverArt = db.CoverArts.Find(id);
-            db.CoverArts.Remove(coverArt);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                CoverArt coverArt = db.CoverArts.Find(id);
+                db.CoverArts.Remove(coverArt);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (DataException)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -51,11 +51,18 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,MyGamesID,HoursPlayed,IsBeaten,TrophiesEarned")] Stats stats)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Stats.Add(stats);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Stats.Add(stats);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
             }
 
             ViewBag.MyGamesID = new SelectList(db.Games, "ID", "Name", stats.MyGamesID);
@@ -85,22 +92,33 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,MyGamesID,HoursPlayed,IsBeaten,TrophiesEarned")] Stats stats)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(stats).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(stats).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
             }
             ViewBag.MyGamesID = new SelectList(db.Games, "ID", "Name", stats.MyGamesID);
             return View(stats);
         }
 
         // GET: Stats/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, bool? saveChangesError=false)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, if the problem persists please contact the system administrator.";
             }
             Stats stats = db.Stats.Find(id);
             if (stats == null)
@@ -115,10 +133,17 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Stats stats = db.Stats.Find(id);
-            db.Stats.Remove(stats);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                Stats stats = db.Stats.Find(id);
+                db.Stats.Remove(stats);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (DataException)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
         }
 
         protected override void Dispose(bool disposing)

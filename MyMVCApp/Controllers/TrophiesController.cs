@@ -51,13 +51,19 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,StatsID,Name,Description,Type")] Trophies trophies)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Trophies.Add(trophies);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Trophies.Add(trophies);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
-
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
+            }
             ViewBag.StatsID = new SelectList(db.Stats, "ID", "ID", trophies.MyGamesID);
             return View(trophies);
         }
@@ -85,18 +91,25 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,StatsID,Name,Description,Type")] Trophies trophies)
         {
-            if (ModelState.IsValid)
+            try
             {
-                db.Entry(trophies).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(trophies).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (DataException)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again. If problem persits contact the system administrator");
             }
             ViewBag.StatsID = new SelectList(db.Stats, "ID", "ID", trophies.MyGamesID);
             return View(trophies);
         }
 
         // GET: Trophies/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, bool? saveChangesError=false)
         {
             if (id == null)
             {
@@ -107,6 +120,10 @@ namespace MyMVCApp.Controllers
             {
                 return HttpNotFound();
             }
+            if (saveChangesError.GetValueOrDefault())
+            {
+                ViewBag.ErrorMessage = "Delete failed. Try again, if the problem persists please contact the system administrator.";
+            }
             return View(trophies);
         }
 
@@ -115,10 +132,17 @@ namespace MyMVCApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Trophies trophies = db.Trophies.Find(id);
-            db.Trophies.Remove(trophies);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                Trophies trophies = db.Trophies.Find(id);
+                db.Trophies.Remove(trophies);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch (DataException)
+            {
+                return RedirectToAction("Delete", new { id = id, saveChangesError = true });
+            }
         }
 
         protected override void Dispose(bool disposing)
